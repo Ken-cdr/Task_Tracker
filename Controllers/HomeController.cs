@@ -130,7 +130,9 @@ namespace TaskTracker.Controllers
                     var h = Math.Max(1, (int)Math.Ceiling(span.TotalHours));
                     return h == 1 ? "1 hour" : $"{h} hours";
                 }
-                var d = Math.Max(1, (int)Math.Ceiling(span.TotalDays));
+
+                // Avoid over-reporting (e.g. ~24h should not become "2 days").
+                var d = Math.Max(1, (int)Math.Floor(span.TotalDays));
                 return d == 1 ? "1 day" : $"{d} days";
             }
 
