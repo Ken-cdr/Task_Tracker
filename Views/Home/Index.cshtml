@@ -86,8 +86,10 @@
             var task = taskModel.Task;
             var status = taskModel.Status;
             var rowClass = status.ToLower().Replace(" ", "-");
-            var startText = task.StartDate.HasValue ? task.StartDate.Value.ToString("g") : "Not set";
-            var deadlineText = task.Deadline.HasValue ? task.Deadline.Value.ToString("g") : "Not set";
+            var localStart = task.StartDate?.Kind == DateTimeKind.Utc ? task.StartDate.Value.ToLocalTime() : task.StartDate;
+            var localDeadline = task.Deadline?.Kind == DateTimeKind.Utc ? task.Deadline.Value.ToLocalTime() : task.Deadline;
+            var startText = localStart.HasValue ? localStart.Value.ToString("g") : "Not set";
+            var deadlineText = localDeadline.HasValue ? localDeadline.Value.ToString("g") : "Not set";
             var priorityClass = task.Priority.ToString().ToLower();
             var priorityLabel = task.Priority.ToString();
             var progressPercentage = task.GetProgressPercentage();

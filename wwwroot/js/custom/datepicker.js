@@ -5,7 +5,10 @@ document.addEventListener('DOMContentLoaded', function() {
         enableTime: true,
         // Must match datetime-local expected value format.
         dateFormat: "Y-m-d\\TH:i",
-        time_24hr: true,
+        // Show user-friendly 12-hour value with AM/PM while submitting ISO-like datetime-local.
+        altInput: true,
+        altFormat: "F j, Y h:i K",
+        time_24hr: false,
         clickOpens: true,
         allowInput: false,
         plugins: [new confirmDatePlugin({})]
