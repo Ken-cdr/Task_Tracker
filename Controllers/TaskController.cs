@@ -289,15 +289,21 @@ namespace TaskTracker.Data
             if (string.IsNullOrWhiteSpace(title))
                 return false;
 
-            var normalized = title.Trim().ToLowerInvariant();
+            var normalized = title.Trim();
             if (normalized.Length == 0)
                 return false;
 
-            return _context.Tasks.AsNoTracking().Any(t =>
-                t.UserId == userId &&
-                t.Id != excludeTaskId &&
-                t.Title != null &&
-                t.Title.Trim().ToLowerInvariant() == normalized);
+            // Keep DB filtering simple and do case-insensitive comparison in memory
+            // to avoid provider-specific SQL translation errors in production.
+            return _context.Tasks
+                .AsNoTracking()
+                .Where(t => t.UserId == userId && t.Id != excludeTaskId && t.Title != null)
+                .Select(t => t.Title!)
+                .AsEnumerable()
+                .Any(existingTitle => string.Equals(
+                    existingTitle.Trim(),
+                    normalized,
+                    StringComparison.OrdinalIgnoreCase));
         }
     }
 
