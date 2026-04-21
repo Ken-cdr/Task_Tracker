@@ -32,23 +32,24 @@ namespace TaskTracker.Controllers
                 .ToList();
 
             // Calculate statistics and create task view models with status
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
             var tasksWithStatus = tasks.Select(t =>
             {
                 string status;
                 int statusPriority;
+                var deadlineUtc = ToUtc(t.Deadline);
 
                 if (t.IsCompleted)
                 {
                     status = "Completed";
                     statusPriority = 3;
                 }
-                else if (t.Deadline.HasValue && t.Deadline < now)
+                else if (deadlineUtc.HasValue && deadlineUtc.Value < now)
                 {
                     status = "Overdue";
                     statusPriority = 0;
                 }
-                else if (t.Deadline.HasValue && t.Deadline < now.AddDays(1))
+                else if (deadlineUtc.HasValue && deadlineUtc.Value < now.AddDays(1))
                 {
                     status = "Due Soon";
                     statusPriority = 1;
@@ -74,9 +75,9 @@ namespace TaskTracker.Controllers
             {
                 Tasks = tasksWithStatus,
                 CompletedCount = tasks.Count(t => t.IsCompleted),
-                PendingCount = tasks.Count(t => !t.IsCompleted && (t.Deadline == null || t.Deadline >= now)),
-                OverdueCount = tasks.Count(t => !t.IsCompleted && t.Deadline.HasValue && t.Deadline < now),
-                NearingDueDateCount = tasks.Count(t => !t.IsCompleted && t.Deadline.HasValue && t.Deadline >= now && t.Deadline < now.AddDays(1)),
+                PendingCount = tasks.Count(t => !t.IsCompleted && (!ToUtc(t.Deadline).HasValue || ToUtc(t.Deadline) >= now)),
+                OverdueCount = tasks.Count(t => !t.IsCompleted && ToUtc(t.Deadline).HasValue && ToUtc(t.Deadline) < now),
+                NearingDueDateCount = tasks.Count(t => !t.IsCompleted && ToUtc(t.Deadline).HasValue && ToUtc(t.Deadline) >= now && ToUtc(t.Deadline) < now.AddDays(1)),
                 TaskReminders = BuildTaskReminders(tasks, now)
             };
 
@@ -84,9 +85,7 @@ namespace TaskTracker.Controllers
             return View(viewModel);
         }
 
-        /// <summary>
-        /// One reminder per open task with a deadline, most urgent trigger only (overdue → at deadline → within 1h → within 24h).
-        /// </summary>
+      //build task reminders
         private static List<TaskReminderViewModel> BuildTaskReminders(IEnumerable<TaskItem> tasks, DateTime now)
         {
             static string FormatDuration(TimeSpan span)
@@ -116,7 +115,7 @@ namespace TaskTracker.Controllers
 
             foreach (var task in tasks.Where(t => !t.IsCompleted && t.Deadline.HasValue))
             {
-                var deadline = task.Deadline!.Value;
+                var deadline = ToUtc(task.Deadline)!.Value;
                 var until = deadline - now;
 
                 TaskReminderKind kind;
@@ -185,8 +184,8 @@ namespace TaskTracker.Controllers
                 return Unauthorized();
 
             
-            year ??= DateTime.Now.Year;
-            month ??= DateTime.Now.Month;
+            year ??= DateTime.UtcNow.Year;
+            month ??= DateTime.UtcNow.Month;
 
             var tasks = _context.Tasks
                 .Where(t => t.UserId == userId)
@@ -196,6 +195,20 @@ namespace TaskTracker.Controllers
             ViewBag.Month = month;
 
             return View(tasks);
+        }
+
+        private static DateTime? ToUtc(DateTime? value)
+        {
+            if (!value.HasValue)
+                return null;
+
+            var dt = value.Value;
+            return dt.Kind switch
+            {
+                DateTimeKind.Utc => dt,
+                DateTimeKind.Local => dt.ToUniversalTime(),
+                _ => DateTime.SpecifyKind(dt, DateTimeKind.Local).ToUniversalTime()
+            };
         }
     }
 }
