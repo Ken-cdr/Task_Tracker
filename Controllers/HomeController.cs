@@ -136,7 +136,6 @@ namespace TaskTracker.Controllers
 
             const int atDeadlineMinutes = 15;
             var oneHour = TimeSpan.FromHours(1);
-            var oneDay = TimeSpan.FromDays(1);
 
             var list = new List<TaskReminderViewModel>();
 
@@ -163,7 +162,7 @@ namespace TaskTracker.Controllers
                     kind = TaskReminderKind.DueWithinHour;
                     message = $"{task.Title} is due in {FormatDuration(until)}.";
                 }
-                else if (until <= oneDay)
+                else if (IsDueSoon(deadline, now))
                 {
                     kind = TaskReminderKind.DueWithinDay;
                     message = $"{task.Title} is due in {FormatDuration(until)}.";
