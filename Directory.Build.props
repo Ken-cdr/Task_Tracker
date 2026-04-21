@@ -4,5 +4,7 @@
     <RestoreConfigFile>$(MSBuildThisFileDirectory)NuGet.config</RestoreConfigFile>
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
     <RestoreFallbackFolders></RestoreFallbackFolders>
+    <!-- Avoid CrossGen/ICU failures in constrained Linux CI images -->
+    <PublishReadyToRun>false</PublishReadyToRun>
   </PropertyGroup>
 </Project>
