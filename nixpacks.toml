@@ -1,0 +1,20 @@
+[variables]
+NUGET_FALLBACK_PACKAGES = ""
+NUGET_PACKAGES = "/tmp/nuget-packages"
+
+[phases.setup]
+nixPkgs = ["dotnet-sdk_10", "icu", "openssl"]
+
+[phases.install]
+cmds = [
+  "dotnet nuget locals all --clear",
+  "dotnet restore TaskTracker.csproj --configfile ./NuGet.config --packages $NUGET_PACKAGES /p:DisableImplicitNuGetFallbackFolder=true /p:RestoreFallbackFolders= /p:RestoreNoCache=true /p:RestoreForce=true"
+]
+
+[phases.build]
+cmds = [
+  "dotnet publish TaskTracker.csproj -c Release -o out --configfile ./NuGet.config --packages $NUGET_PACKAGES /p:DisableImplicitNuGetFallbackFolder=true /p:RestoreFallbackFolders= /p:RestoreNoCache=true /p:RestoreForce=true"
+]
+
+[start]
+cmd = "ASPNETCORE_URLS=http://0.0.0.0:${PORT:-8080} dotnet out/TaskTracker.dll"

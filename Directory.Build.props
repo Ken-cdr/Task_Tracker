@@ -1,0 +1,8 @@
+<Project>
+  <PropertyGroup>
+    <!-- Force repository NuGet settings in CI/Linux builds -->
+    <RestoreConfigFile>$(MSBuildThisFileDirectory)NuGet.config</RestoreConfigFile>
+    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+    <RestoreFallbackFolders></RestoreFallbackFolders>
+  </PropertyGroup>
+</Project>
