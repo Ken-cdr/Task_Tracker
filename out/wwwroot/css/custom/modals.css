@@ -1,0 +1,205 @@
+
+
+/* ===== MODAL CONTAINER ===== */
+.modal {
+    --bs-modal-backdrop-bg: rgba(0, 0, 0, 0.5);
+}
+
+/* ===== MODAL CONTENT ===== */
+.modal-content {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    animation: modalSlideIn 0.3s ease-in-out;
+}
+
+/* ===== MODAL HEADER ===== */
+.modal-header {
+    background: linear-gradient(135deg, rgba(7, 130, 200, 0.1), rgba(123, 195, 241, 0.1));
+    border-bottom: 1px solid rgba(0, 122, 204, 0.2);
+    padding: 1.5rem;
+    border-radius: 12px 12px 0 0;
+}
+
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+/* Close button styling */
+.btn-close {
+    background: transparent;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+}
+
+.btn-close:hover {
+    opacity: 1;
+}
+
+.btn-close-white {
+    background: rgba(255, 255, 255, 0.8);
+    opacity: 0.7;
+}
+
+.btn-close-white:hover {
+    opacity: 1;
+}
+
+/* ===== MODAL BODY ===== */
+.modal-body {
+    padding: 1.5rem;
+    color: #444;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    max-height: calc(100vh - 250px);
+    overflow-y: auto;
+}
+
+/* Scrollbar styling */
+.modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: rgba(0, 122, 204, 0.3);
+    border-radius: 3px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 122, 204, 0.5);
+}
+
+/* ===== MODAL FOOTER ===== */
+.modal-footer {
+    background: rgba(245, 245, 245, 0.5);
+    border-top: 1px solid rgba(0, 122, 204, 0.1);
+    padding: 1rem 1.5rem;
+    border-radius: 0 0 12px 12px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+/* ===== BUTTON STYLES IN MODALS ===== */
+.modal-footer .btn,
+.modal-footer a.btn {
+    padding: 0.6rem 1.5rem;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+}
+
+/* PRIMARY ACTION BUTTON */
+.modal-footer .btn-primary,
+.modal-footer .btn-danger {
+    background-color: #0782c8;
+    color: white;
+}
+
+.modal-footer .btn-primary:hover,
+.modal-footer .btn-danger:hover {
+    background-color: #0661a1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(7, 130, 200, 0.3);
+}
+
+.modal-footer .btn-primary:active,
+.modal-footer .btn-danger:active {
+    transform: translateY(0);
+}
+
+/* SECONDARY ACTION BUTTON  */
+.modal-footer .btn-secondary,
+.modal-footer .btn-light {
+    background-color: #e9ecef;
+    color: #495057;
+    border: 1px solid #dee2e6;
+}
+
+.modal-footer .btn-secondary:hover,
+.modal-footer .btn-light:hover {
+    background-color: #dee2e6;
+    color: #212529;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.modal-footer .btn-secondary:active,
+.modal-footer .btn-light:active {
+    transform: translateY(0);
+}
+
+/* ===== TEXT CONTENT IN MODALS ===== */
+.modal-body p {
+    margin: 0.5rem 0;
+}
+
+.modal-body strong {
+    color: #0782c8;
+    font-weight: 600;
+}
+
+/* ===== MODAL ANIMATIONS ===== */
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 576px) {
+    .modal-content {
+        border-radius: 8px;
+        margin: 1rem;
+    }
+
+    .modal-header {
+        padding: 1rem;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .modal-footer {
+        padding: 0.75rem 1rem;
+        border-radius: 0 0 8px 8px;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .modal-body {
+        padding: 1rem;
+    }
+
+    .modal-title {
+        font-size: 1.1rem;
+    }
+
+    .modal-footer .btn,
+    .modal-footer a.btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        flex: 1;
+        min-width: 100px;
+    }
+}
