@@ -33,6 +33,9 @@ namespace TaskTracker.Data
             if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
                 return Unauthorized();
 
+            if (string.IsNullOrWhiteSpace(task.Title))
+                ModelState.AddModelError(nameof(TaskItem.Title), "Title is required.");
+
             if (TitleExistsForUser(userId, task.Title, excludeTaskId: 0))
                 ModelState.AddModelError(nameof(TaskItem.Title), "A task with this title already exists.");
 
@@ -70,6 +73,9 @@ namespace TaskTracker.Data
             var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
                 return Unauthorized();
+
+            if (string.IsNullOrWhiteSpace(task.Title))
+                ModelState.AddModelError(nameof(TaskItem.Title), "Title is required.");
 
             if (TitleExistsForUser(userId, task.Title, excludeTaskId: task.Id))
                 ModelState.AddModelError(nameof(TaskItem.Title), "A task with this title already exists.");
@@ -242,9 +248,6 @@ namespace TaskTracker.Data
             return Json(new { items = items });
         }
 
-        /// <summary>
-        /// Used by jQuery unobtrusive [Remote] on <see cref="TaskItem.Title"/> (create + edit).
-        /// </summary>
         [HttpGet]
         public IActionResult VerifyTitleUnique(string title, int id)
         {
@@ -261,14 +264,18 @@ namespace TaskTracker.Data
 
         private bool TitleExistsForUser(int userId, string title, int excludeTaskId)
         {
-            var normalized = title.Trim().ToLower();
+            if (string.IsNullOrWhiteSpace(title))
+                return false;
+
+            var normalized = title.Trim().ToLowerInvariant();
             if (normalized.Length == 0)
                 return false;
 
             return _context.Tasks.AsNoTracking().Any(t =>
                 t.UserId == userId &&
                 t.Id != excludeTaskId &&
-                t.Title.Trim().ToLower() == normalized);
+                t.Title != null &&
+                t.Title.Trim().ToLowerInvariant() == normalized);
         }
     }
 
