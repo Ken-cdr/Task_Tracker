@@ -9,7 +9,7 @@
         return date.toLocaleString(undefined, options);
     }
 
-    /** Matches HomeController Index: Completed / Overdue / Due Soon / Pending */
+  // calendar task status
     function resolveTaskStatus(task) {
         if (task.isCompleted) {
             return { cssClass: 'completed', label: 'Completed' };
@@ -22,9 +22,10 @@
         if (deadline < now) {
             return { cssClass: 'overdue', label: 'Overdue' };
         }
-        var dueSoonEnd = new Date(now.getTime());
-        dueSoonEnd.setDate(dueSoonEnd.getDate() + 1);
-        if (deadline < dueSoonEnd) {
+
+        var tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        var deadlineDate = new Date(deadline.getFullYear(), deadline.getMonth(), deadline.getDate());
+        if (deadlineDate <= tomorrow) {
             return { cssClass: 'due-soon', label: 'Due Soon' };
         }
         return { cssClass: 'pending', label: 'Pending' };
