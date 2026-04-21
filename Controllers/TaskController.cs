@@ -42,6 +42,8 @@ namespace TaskTracker.Data
             if (!ModelState.IsValid)
                 return View(task);
 
+            task.StartDate = NormalizeToUtc(task.StartDate);
+            task.Deadline = NormalizeToUtc(task.Deadline);
             task.UserId = userId;
             task.IsCompleted = false;
 
@@ -112,10 +114,12 @@ namespace TaskTracker.Data
             if (existingTask.UserId != userId)
                 return Forbid();
 
+            var normalizedStart = NormalizeToUtc(task.StartDate);
+            var normalizedDeadline = NormalizeToUtc(task.Deadline);
             existingTask.Title = task.Title;
             existingTask.Description = task.Description;
-            existingTask.StartDate = task.StartDate;
-            existingTask.Deadline = task.Deadline;
+            existingTask.StartDate = normalizedStart;
+            existingTask.Deadline = normalizedDeadline;
             existingTask.IsCompleted = task.IsCompleted;
             existingTask.Priority = task.Priority;
             existingTask.UserId = userId;
@@ -304,6 +308,20 @@ namespace TaskTracker.Data
                     existingTitle.Trim(),
                     normalized,
                     StringComparison.OrdinalIgnoreCase));
+        }
+
+        private static DateTime? NormalizeToUtc(DateTime? value)
+        {
+            if (!value.HasValue)
+                return null;
+
+            var dt = value.Value;
+            return dt.Kind switch
+            {
+                DateTimeKind.Utc => dt,
+                DateTimeKind.Local => dt.ToUniversalTime(),
+                _ => DateTime.SpecifyKind(dt, DateTimeKind.Local).ToUniversalTime()
+            };
         }
     }
 
