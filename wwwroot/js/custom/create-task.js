@@ -23,6 +23,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    const createForm = document.querySelector('form.task-form');
+    if (createForm) {
+        createForm.addEventListener('submit', function () {
+            createForm.querySelectorAll('input[data-temp-checklist-hidden="true"]').forEach(input => input.remove());
+            tempItems.forEach(item => {
+                const hidden = document.createElement('input');
+                hidden.type = 'hidden';
+                hidden.name = 'checklistItems';
+                hidden.value = item;
+                hidden.setAttribute('data-temp-checklist-hidden', 'true');
+                createForm.appendChild(hidden);
+            });
+        });
+    }
+
     function addTempItem() {
         const description = tempChecklistItem.value.trim();
         

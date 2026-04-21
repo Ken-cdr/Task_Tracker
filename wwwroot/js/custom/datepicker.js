@@ -3,8 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize date pickers for StartDate and Deadline fields
     const datePickerConfig = {
         enableTime: true,
-        dateFormat: "Y-m-d h:i K",
-        time_24hr: false,
+        // Must match datetime-local expected value format.
+        dateFormat: "Y-m-d\\TH:i",
+        time_24hr: true,
         clickOpens: true,
         allowInput: false,
         plugins: [new confirmDatePlugin({})]

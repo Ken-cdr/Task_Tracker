@@ -27,7 +27,7 @@ namespace TaskTracker.Data
         }
 
         [HttpPost]
-        public IActionResult Create(TaskItem task)
+        public IActionResult Create(TaskItem task, List<string>? checklistItems)
         {
             var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
@@ -47,6 +47,28 @@ namespace TaskTracker.Data
 
             _context.Tasks.Add(task);
             _context.SaveChanges();
+
+            if (checklistItems is { Count: > 0 })
+            {
+                var validItems = checklistItems
+                    .Where(i => !string.IsNullOrWhiteSpace(i))
+                    .Select(i => i.Trim())
+                    .Distinct()
+                    .ToList();
+
+                if (validItems.Count > 0)
+                {
+                    var entities = validItems.Select(item => new ChecklistItem
+                    {
+                        Description = item,
+                        IsCompleted = false,
+                        TaskId = task.Id
+                    });
+
+                    _context.ChecklistItems.AddRange(entities);
+                    _context.SaveChanges();
+                }
+            }
 
             return RedirectToAction("Index", "Home");
         }
