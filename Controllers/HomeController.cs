@@ -49,7 +49,7 @@ namespace TaskTracker.Controllers
                     status = "Overdue";
                     statusPriority = 0;
                 }
-                else if (localDeadline.HasValue && localDeadline.Value < now.AddDays(1))
+                else if (localDeadline.HasValue && IsDueSoon(localDeadline.Value, now))
                 {
                     status = "Due Soon";
                     statusPriority = 1;
@@ -88,7 +88,7 @@ namespace TaskTracker.Controllers
                 {
                     overdueCount++;
                 }
-                else if (localDeadline.Value < now.AddDays(1))
+                else if (IsDueSoon(localDeadline.Value, now))
                 {
                     nearingCount++;
                 }
@@ -236,6 +236,15 @@ namespace TaskTracker.Controllers
                 DateTimeKind.Local => dt,
                 _ => DateTime.SpecifyKind(dt, DateTimeKind.Local)
             };
+        }
+
+        private static bool IsDueSoon(DateTime localDeadline, DateTime localNow)
+        {
+            if (localDeadline < localNow)
+                return false;
+
+            // Treat tasks due today or tomorrow as "Due Soon".
+            return localDeadline.Date <= localNow.Date.AddDays(1);
         }
     }
 }
