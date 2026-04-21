@@ -1,0 +1,38 @@
+@{
+    Layout = "_Layout";
+    ViewData["HideFooter"] = true;
+    ViewData["HideNavbar"] = true;
+    ViewData["BodyClass"] = "login-page";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/custom/auth.css" asp-append-version="true" />
+}
+
+
+<div class="login-form">
+    <h2>Login</h2>
+
+    <form asp-action="Login" method="post">
+        <input name="usernameOrEmail" placeholder="Username or Email" required />
+
+        <div class="password-wrapper">
+            <input type="password" id="loginPassword" name="password" placeholder="Password" required />
+            <i id="toggleLoginPassword" class="fa-solid fa-eye toggle-password" title="Show Password"></i>
+        </div>
+
+        <button type="submit">Login</button>
+    </form>
+
+    @if (ViewBag.Error != null)
+    {
+        <p style="color:red">@ViewBag.Error</p>
+    }
+
+    <p class ="message">Don't have an account? <a asp-action="Register">Sign up here</a></p>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/custom/login.js" asp-append-version="true"></script>
+}

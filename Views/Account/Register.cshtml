@@ -1,0 +1,56 @@
+@{
+    Layout = "_Layout";
+    ViewData["HideFooter"] = true;
+    ViewData["HideNavbar"] = true;
+    ViewData["BodyClass"] = "register-page";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/custom/auth.css" asp-append-version="true" />
+}
+
+<div class="register-form">
+    <h2>Sign Up</h2>
+
+    <form asp-action="Register" method="post">
+        <input name="username" placeholder="Username" required />
+        <input name="email" type="email" placeholder="Email@example.com" required />
+
+        <div class="password-wrapper">
+            <input name="password" type="password" id="registerPassword" placeholder="Password" required />
+            <i id="toggleRegisterPassword" class="fa-solid fa-eye toggle-password" title="Show Password"></i>
+        </div>
+
+        <p id="passwordMessage" class="password-message"></p>
+
+        <div class="password-requirements">
+            <p>Password must be at least 8 characters long and include:</p>
+            <ul>
+                <li>At least one uppercase letter</li>
+                <li>At least one lowercase letter</li>
+                <li>At least one number</li>
+                <li>At least one special character</li>
+            </ul>
+        </div>
+
+        <div class="password-wrapper">
+            <input name="confirmPassword" type="password" id="confirmPassword" placeholder="Confirm Password"
+                   required />
+            <i id="toggleConfirmPassword" class="fa-solid fa-eye toggle-password" title="Show Password"></i>
+        </div>
+
+        <button type="submit">Register</button>
+    </form>
+
+    @if (ViewBag.Error != null)
+    {
+        <p style="color:red">@ViewBag.Error</p>
+    }
+
+    <p class="message">Already have an account? <a asp-action="Login">Login here</a></p>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/custom/signup.js" asp-append-version="true"></script>
+}

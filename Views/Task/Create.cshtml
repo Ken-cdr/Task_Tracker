@@ -1,0 +1,74 @@
+@model TaskItem
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/custom/forms.css" asp-append-version="true" />
+}
+
+<div class="form-wrapper">
+    <div class="form-container">
+        <h1>Create New Task</h1>
+
+        <form asp-action="Create" method="post" class="task-form">
+            <div asp-validation-summary="All" class="validation-error"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group">
+                <label asp-for="Title" class="form-label">Task Title:</label>
+                <input asp-for="Title" class="form-control" placeholder="Enter task title" maxlength="30" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+                <small class="form-help">Max 30 characters</small>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Description" class="form-label">Description:</label>
+                <textarea asp-for="Description" class="form-control" placeholder="Enter task description" maxlength="1000" rows="3"></textarea>
+                <small class="form-help">Max 1000 characters</small>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label asp-for="StartDate" class="form-label">Starting Date:</label>
+                    <input asp-for="StartDate" type="datetime-local" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Deadline" class="form-label">Due Date:</label>
+                    <input asp-for="Deadline" type="datetime-local" class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Priority" class="form-label">Priority Level:</label>
+                <select asp-for="Priority" class="form-control">
+                    <option value="0">High</option>
+                    <option value="1" selected>Medium</option>
+                    <option value="2">Low</option>
+                </select>
+            </div>
+
+            <div class="form-divider"></div>
+
+            <button type="submit" class="btn btn-primary btn-lg">Create Task</button>
+        </form>
+    </div>
+
+    <div class="checklist-panel">
+        <h2>Planning</h2>
+        <p class="info-text">Add checklist items to break down your task into smaller steps. You can view them by clicking on the task title on the table.</p>
+        
+        <div class="add-item-section compact">
+            <input type="text" id="tempChecklistItem" class="form-control" placeholder="Add a checklist item..." maxlength="200" />
+            <button type="button" id="addTempChecklistBtn" class="btn btn-add">Add</button>
+        </div>
+
+        <div id="tempChecklistContainer" class="checklist-items" style="display:none;">
+            <div id="tempChecklistItems"></div>
+        </div>
+    </div>
+</div>
+
+<a href="@Url.Action("Index", "Home")" class="btn btn-secondary btn-back">Back to Tasks</a>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/custom/create-task.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,97 @@
+﻿html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+/* ===== PAGE STRUCTURE ===== */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Main content pushes footer down */
+main {
+  flex: 1;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  flex-shrink: 0;
+  line-height: 60px;
+  text-align: center;
+  background: rgba(68, 67, 67, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: white;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ===== NAVBAR BRAND ===== */
+a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-word;
+}
+
+/* ===== LINKS ===== */
+a {
+  color: #0077cc;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ===== BUTTON LINKS ===== */
+a.btn,
+a.btn:link,
+a.btn:visited,
+a.btn:hover,
+a.btn:focus,
+a.btn:active {
+  color: #fff !important;
+  text-decoration: none;
+}
+
+/* ===== PRIMARY BUTTON ===== */
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.btn-primary:hover {
+  background-color: #155a9c;
+  border-color: #124a80;
+}
+
+/* ===== NAV PILLS ===== */
+.nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+/* ===== BORDERS ===== */
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+/* ===== SHADOW ===== */
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+/* ===== BUTTON TEXT FIX ===== */
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}

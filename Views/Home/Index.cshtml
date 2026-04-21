@@ -1,0 +1,202 @@
+﻿@model TaskDashboardViewModel
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/custom/home.css" asp-append-version="true" />
+}
+
+<h2>Tasks Dashboard</h2>
+
+<!-- Reminders: one row per task (stat cards already show aggregate counts) -->
+@if (Model?.TaskReminders is { Count: > 0 })
+{
+    <div id="dashboardReminderPanel" class="reminders-section" aria-label="Task deadline reminders">
+        <div class="reminder-panel-header">
+            <h3 class="reminder-panel-title">Notifications</h3>
+            <button type="button" id="closeReminderPanel" class="reminder-panel-close" aria-label="Close notifications">&times;</button>
+        </div>
+        <div class="reminder-list">
+            @foreach (var r in Model.TaskReminders)
+            {
+                var css = r.Kind switch
+                {
+                    TaskReminderKind.Overdue => "reminder-alert reminder-overdue",
+                    TaskReminderKind.AtDeadline => "reminder-alert reminder-at-deadline",
+                    TaskReminderKind.DueWithinHour => "reminder-alert reminder-due-hour",
+                    TaskReminderKind.DueWithinDay => "reminder-alert reminder-due-soon",
+                    _ => "reminder-alert reminder-due-soon"
+                };
+                var icon = r.Kind switch
+                {
+                    TaskReminderKind.Overdue => "⚠️",
+                    TaskReminderKind.AtDeadline => "⏱️",
+                    _ => "📅"
+                };
+                <div class="@css" data-reminder-task-id="@r.TaskId" data-reminder-message="@r.Message" data-reminder-icon="@icon">
+                    <div class="reminder-icon">@icon</div>
+                    <div class="reminder-content">
+                        <p class="reminder-message">@r.Message</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+<!-- Task Statistics Section -->
+@if (Model != null)
+{
+    <div class="statistics-container">
+        <div class="stat-card completed">
+            <div class="stat-number">@Model.CompletedCount</div>
+            <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat-card pending">
+            <div class="stat-number">@Model.PendingCount</div>
+            <div class="stat-label">Pending</div>
+        </div>
+        <div class="stat-card overdue">
+            <div class="stat-number">@Model.OverdueCount</div>
+            <div class="stat-label">Overdue</div>
+        </div>
+        <div class="stat-card nearing">
+            <div class="stat-number">@Model.NearingDueDateCount</div>
+            <div class="stat-label">Nearing Due Date</div>
+        </div>
+    </div>
+}
+
+<a asp-controller="Task" asp-action="Create" class="btn-add-task">Add Task</a>
+
+@if (Model != null && Model.Tasks != null && Model.Tasks.Count > 0)
+{
+    <table border="1">
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Starting Date</th>
+            <th>Due Date</th>
+            <th>Priority</th>
+            <th>Progress</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+
+        @foreach (var taskModel in Model.Tasks)
+        {
+            var task = taskModel.Task;
+            var status = taskModel.Status;
+            var rowClass = status.ToLower().Replace(" ", "-");
+            var startText = task.StartDate.HasValue ? task.StartDate.Value.ToString("g") : "Not set";
+            var deadlineText = task.Deadline.HasValue ? task.Deadline.Value.ToString("g") : "Not set";
+            var priorityClass = task.Priority.ToString().ToLower();
+            var priorityLabel = task.Priority.ToString();
+            var progressPercentage = task.GetProgressPercentage();
+            var completedCount = task.ChecklistItems?.Count(c => c.IsCompleted) ?? 0;
+            var totalChecklistCount = task.ChecklistItems?.Count ?? 0;
+            var progressText = totalChecklistCount > 0 ? $"{completedCount}/{totalChecklistCount}" : "No items";
+
+            <tr class="@rowClass" data-task-row="@task.Id">
+                <td>
+                    <a href="javascript:void(0);" class="task-title-link" data-task-id="@task.Id" data-task-title="@task.Title">
+                        @task.Title
+                    </a>
+                </td>
+                <td>
+                    <span class="truncate-description"
+                    data-bs-toggle="modal" 
+                    data-bs-target="#descriptionModal"
+                    data-description="@task.Description">
+                    @(task.Description.Length > 30 ? task.Description.Substring(0, 30) + "..." : task.Description)
+                    </span>
+                </td>
+                <td>@startText</td>
+                <td>@deadlineText</td>
+                <td>
+                    <span class="priority-badge priority-@priorityClass">@priorityLabel</span>
+                </td>
+                <td class="progress-cell" data-task-progress-cell="@task.Id">
+                    @if (totalChecklistCount > 0)
+                    {
+                        <div class="progress-info" data-task-progress-text="@task.Id">@progressText</div>
+                        <div class="progress">
+                            <div class="progress-bar" data-task-progress-bar="@task.Id" role="progressbar" style="width: @progressPercentage%" aria-valuenow="@progressPercentage" aria-valuemin="0" aria-valuemax="100">
+                                @progressPercentage%
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <span class="progress-empty" data-task-progress-empty="@task.Id">@progressText</span>
+                    }
+                </td>
+                <td class="status @status.ToLower().Replace(" ", "-")" data-task-status="@task.Id">
+                    @status
+                </td>
+                <td class="actions-cell" data-task-actions="@task.Id">
+                    <details class="actions-menu">
+                        <summary class="actions-trigger" aria-label="Task actions">⋮</summary>
+                        <div class="actions-dropdown">
+                            <a href="javascript:void(0);" onclick="showConfirm('Are you sure you want to edit this task?', '@Url.Action("Edit", "Task", new { id = task.Id })');">Edit</a>
+                            <a href="javascript:void(0);" onclick="showConfirm('Are you sure you want to delete this task?', '@Url.Action("Delete", "Task", new { id = task.Id })');">Delete</a>
+                            @if (!task.IsCompleted)
+                            {
+                                <a href="javascript:void(0);" data-task-complete-link="@task.Id" onclick="showConfirm('Are you sure you want to mark this task as complete?', '@Url.Action("Complete", "Task", new { id = task.Id })');">Complete</a>
+                            }
+                        </div>
+                    </details>
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <p>No tasks found.</p>
+}
+
+<hr />
+<a asp-controller="Home" asp-action="Calendar" class="footer-link">View Calendar</a>
+
+
+<div class="modal fade" id="descriptionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Task Description</h5>
+            </div>
+            <div class="modal-body" id="modalDescription">
+                <!-- Full description will appear here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Checklist Modal -->
+<div id="checklistModal">
+    <div class="checklist-modal-content">
+        <div class="checklist-modal-header">
+            <h2 id="checklistModalTitle">Checklist</h2>
+            <button class="checklist-modal-close" onclick="closeChecklistModal()">&times;</button>
+        </div>
+        <div id="checklistModalContent">
+            <!-- Checklist items will be loaded here -->
+        </div>
+    </div>
+</div>
+
+<!-- Hidden CSRF Token for AJAX requests -->
+<input type="hidden" name="__RequestVerificationToken" value="@(ViewData["__RequestVerificationToken"]?.ToString() ?? TempData["__RequestVerificationToken"]?.ToString())" />
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/custom/fulldescription.js" asp-append-version="true"></script>
+    <script src="~/js/custom/checklist-view.js" asp-append-version="true"></script>
+    <script src="~/js/custom/dashboard-reminders.js" asp-append-version="true"></script>
+}

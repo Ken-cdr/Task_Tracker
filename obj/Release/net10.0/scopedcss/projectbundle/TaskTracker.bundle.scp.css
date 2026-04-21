@@ -1,0 +1,98 @@
+/* /Views/Shared/_Layout.cshtml.rz.scp.css */
+html[b-rhcga3ef4i],
+body[b-rhcga3ef4i] {
+  height: 100%;
+  margin: 0;
+}
+
+/* ===== PAGE STRUCTURE ===== */
+body[b-rhcga3ef4i] {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Main content pushes footer down */
+main[b-rhcga3ef4i] {
+  flex: 1;
+}
+
+/* ===== FOOTER ===== */
+footer[b-rhcga3ef4i] {
+  flex-shrink: 0;
+  line-height: 60px;
+  text-align: center;
+  background: rgba(68, 67, 67, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: white;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ===== NAVBAR BRAND ===== */
+a.navbar-brand[b-rhcga3ef4i] {
+  white-space: normal;
+  text-align: center;
+  word-break: break-word;
+}
+
+/* ===== LINKS ===== */
+a[b-rhcga3ef4i] {
+  color: #0077cc;
+  text-decoration: none;
+}
+
+a:hover[b-rhcga3ef4i] {
+  text-decoration: underline;
+}
+
+/* ===== BUTTON LINKS ===== */
+a.btn[b-rhcga3ef4i],
+a.btn:link[b-rhcga3ef4i],
+a.btn:visited[b-rhcga3ef4i],
+a.btn:hover[b-rhcga3ef4i],
+a.btn:focus[b-rhcga3ef4i],
+a.btn:active[b-rhcga3ef4i] {
+  color: #fff !important;
+  text-decoration: none;
+}
+
+/* ===== PRIMARY BUTTON ===== */
+.btn-primary[b-rhcga3ef4i] {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.btn-primary:hover[b-rhcga3ef4i] {
+  background-color: #155a9c;
+  border-color: #124a80;
+}
+
+/* ===== NAV PILLS ===== */
+.nav-pills .nav-link.active[b-rhcga3ef4i],
+.nav-pills .show>.nav-link[b-rhcga3ef4i] {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+/* ===== BORDERS ===== */
+.border-top[b-rhcga3ef4i] {
+  border-top: 1px solid #e5e5e5;
+}
+
+.border-bottom[b-rhcga3ef4i] {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+/* ===== SHADOW ===== */
+.box-shadow[b-rhcga3ef4i] {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+/* ===== BUTTON TEXT FIX ===== */
+button.accept-policy[b-rhcga3ef4i] {
+  font-size: 1rem;
+  line-height: inherit;
+}

@@ -1,0 +1,64 @@
+﻿@using System.Text.Json
+@model List<TaskItem>
+
+@{
+    ViewData["Title"] = "Task Calendar";
+    var year = (int)ViewBag.Year;
+    var month = (int)ViewBag.Month;
+    var currentMonth = new DateTime(year, month, 1);
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/custom/calendar.css" asp-append-version="true" />
+}
+
+<div class="calendar-page">
+    <div class="calendar-header" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+        <button id="calendar-prev" type="button" class="btn btn-secondary">Previous</button>
+        <h1 id="calendar-month-label" style="margin:0;">@currentMonth.ToString("MMMM yyyy")</h1>
+        <button id="calendar-next" type="button" class="btn btn-secondary">Next</button>
+    </div>
+
+    <div id="calendar-root"></div>
+
+    <div style="margin-top:1rem;">
+        <a href="@Url.Action("Index", "Home")" class="btn btn-secondary btn-back">Back to Tasks</a>  |
+        <a asp-controller="Account" asp-action="Logout" class="btn btn-secondary">Logout</a>
+    </div>
+</div>
+
+<!-- Modal for tasks on a day -->
+<div class="modal fade" id="dayModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tasks for <span id="modalDayLabel"></span></h5>
+            </div>
+            <div class="modal-body" id="modalDayBody">
+                <!-- JS will inject tasks here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.calendarTasks = @Html.Raw(JsonSerializer.Serialize(Model.Where(t => t.Deadline.HasValue).Select(task => new {
+        id = task.Id,
+        title = task.Title,
+        description = task.Description,
+        deadline = task.Deadline!.Value.ToString("o"),
+        isCompleted = task.IsCompleted
+    })));
+
+    window.calendarInitialYear = @year;
+    window.calendarInitialMonth = @month;
+</script>
+
+@section Scripts {
+    <script src="~/js/custom/calendar.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,245 @@
+/* GLOBAL RESET */
+* {
+    box-sizing: border-box;
+}
+
+/* PAGE BACKGROUND */
+body {
+    background: url('/bg-image/calendar-bg.jpg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    position: relative;
+    margin: 0;
+    padding: 3rem 2rem;
+    color: #969494;
+    z-index: 0;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(78, 77, 77, 0.548);
+    z-index: -1;
+}
+
+/* CALENDAR CONTAINER */
+.calendar-page {
+    width: 920px;
+    max-width: 100%;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+}
+
+
+#calendar-root {
+    width: 100%;
+    min-height: 660px;
+}
+
+/* CALENDAR TABLE */
+.calendar-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.164);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(216, 216, 216, 0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* TABLE HEADER */
+.calendar-table th {
+    background: rgba(180, 180, 180, 0.35);
+    color: #222;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+    padding: 0.5rem 0.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    width: 14.28%;
+    height: 2.75rem;
+    vertical-align: middle;
+}
+
+/* TABLE CELL */
+.calendar-table td {
+    height: 100px;
+    min-height: 100px;
+    max-height: 100px;
+    width: 14.28%;
+    position: relative;
+    cursor: pointer;
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-size: 0.75rem;
+    padding: 0.3rem;
+    background: rgba(255, 255, 255, 0.116);
+    border: 1px solid rgba(255, 255, 255, 0.445);
+    transition: background 0.3s ease;
+    vertical-align: top;
+}
+
+/* CELL HOVER */
+.calendar-table td:hover {
+    background: rgba(200, 200, 200, 0.25);
+}
+
+/* OUTSIDE MONTH DAYS */
+.calendar-table td span {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* DAY NUMBER */
+.calendar-table td div:first-child {
+    font-weight: bold;
+    margin-bottom: 2px;
+    color: #222;
+}
+
+/* TASK BOX */
+.calendar-table td div.task-box {
+    background: rgba(255, 255, 255, 0.863);
+    border-radius: 4px;
+    margin: 2px 0;
+    padding: 2px 4px;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-height: 1.2rem;
+    line-height: 1.2;
+}
+
+/* TASK HOVER */
+.calendar-table td div.task-box:hover {
+    background: rgba(189, 189, 189, 0.911);
+}
+
+/* TASK COMPLETED */
+.task-box.completed {
+    color: #2e7d32;
+    font-weight: 600;
+}
+
+/* TASK PENDING */
+.task-box.pending {
+    color: #0d6efd;
+    font-weight: 500;
+}
+
+/* TASK OVERDUE */
+.task-box.overdue {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+/* TASK DUE SOON */
+.task-box.due-soon {
+    color: #b45309;
+    font-weight: 600;
+}
+
+/* SCROLLBAR */
+.calendar-table td::-webkit-scrollbar {
+    width: 4px;
+}
+
+.calendar-table td::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: 2px;
+}
+
+/* MODAL */
+.modal-content {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    border: none;
+}
+
+/* MODAL TITLE */
+.modal-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* MODAL TASK */
+.modal-task {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: rgba(7, 130, 200, 0.08);
+    border-left: 3px solid #0782c8;
+    border-radius: 4px;
+}
+
+/* CALENDAR HEADER */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    color: #ffffff;
+}
+
+/* HEADER TITLE */
+.calendar-header h2 {
+    margin: 0;
+    font-size: 4rem;
+    font-weight: 900;
+}
+
+/* HEADER BUTTONS */
+.calendar-header .btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+
+/* BUTTON HOVER */
+.calendar-header .btn:hover {
+    background: rgba(255, 255, 255, 0.35);
+    color: #000;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    body {
+        padding: 2rem 1rem;
+    }
+
+    .calendar-page {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    #calendar-root {
+        min-height: 520px;
+    }
+
+    .calendar-table td {
+        height: 80px;
+        min-height: 80px;
+        max-height: 80px;
+        font-size: 0.65rem;
+    }
+
+    .calendar-table th {
+        font-size: 0.75rem;
+        height: 2.25rem;
+    }
+
+    .task-box {
+        font-size: 0.6rem;
+    }
+
+    .calendar-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+    }
+}
